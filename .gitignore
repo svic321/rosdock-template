@@ -3,3 +3,6 @@
 !.devcontainer/
 !.devcontainer/**
 !README.md
+!docker/
+!docker/**
+!.dockerignore
