@@ -18,7 +18,7 @@ RUN groupadd --gid $USER_GID $USERNAME \
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y python3-pip
 RUN apt-get install -y zsh git curl openssh-client command-not-found
-RUN apt-get install -y bat ripgrep fd-find zoxide eza lf
+RUN apt-get install -y bat ripgrep fd-find zoxide eza lf starship tmux git-delta
 
 # Install oh-my-zsh for the user and make zsh the default login shell
 RUN chsh -s $(which zsh) $USERNAME
@@ -26,6 +26,10 @@ USER $USERNAME
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions \
         && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting \
+        && git clone https://github.com/zsh-users/zsh-completions ~/.oh-my-zsh/custom/plugins/zsh-completions \
+        && git clone https://github.com/MichaelAquilina/zsh-you-should-use.git ~/.oh-my-zsh/custom/plugins/you-should-use \
+        && git clone https://github.com/butakus/ros2-env ~/.oh-my-zsh/custom/plugins/ros2-env \
+        && git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm \
         && git clone https://github.com/hlissner/zsh-autopair ~/.oh-my-zsh/custom/plugins/zsh-autopair \
         && git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf \
         && ~/.fzf/install --all \
@@ -37,7 +41,11 @@ RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/cust
     zsh-syntax-highlighting\
     zsh-autosuggestions\
     zsh-autopair\
-)' ~/.zshrc
+    you-should-use\
+    ros2-env\
+) ' ~/.zshrc
+RUN sed -i '74i fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src' ~/.zshrc \
+                && sed -i '75i autoload -U compinit && compinit' ~/.zshrc
 RUN mkdir -p ~/.local/bin \
         && curl https://raw.githubusercontent.com/thimc/lfimg/refs/heads/master/lfrun -o ~/.local/bin/lfrun \
         && chmod +x ~/.local/bin/lfrun \
@@ -54,6 +62,9 @@ RUN curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linu
 USER $USERNAME
 RUN echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >> ~/.zshrc
 RUN printf '%s\n' \
+        'if [[ -f /opt/ros/${ROS_DISTRO:-rolling}/setup.zsh ]]; then' \
+        '  source /opt/ros/${ROS_DISTRO:-rolling}/setup.zsh' \
+        'fi' \
         'if [[ -f ~/.svic321/zshrc.zsh ]]; then' \
         '  source ~/.svic321/zshrc.zsh' \
         'fi' \
@@ -61,7 +72,9 @@ RUN printf '%s\n' \
         '  export PATH=$PATH:~/.local/bin' \
         'fi' \
         'eval "$(register-python-argcomplete ros2)"' \
-        'eval "$(register-python-argcomplete colcon)"' >> ~/.zshrc
+        'eval "$(register-python-argcomplete colcon)"' \
+        'eval "$(zoxide init zsh)"' \
+        'eval "$(starship init zsh)"' >> ~/.zshrc
 USER root
 
 # ********************************************************
