@@ -1,4 +1,6 @@
-FROM ros:rolling
+ARG ROS_DISTRO=rolling
+FROM ros:${ROS_DISTRO}
+ARG ROS_DISTRO
 ARG USERNAME=USERNAME
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
@@ -62,9 +64,9 @@ RUN curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linu
 USER $USERNAME
 RUN echo 'export PATH="$PATH:/opt/nvim-linux-x86_64/bin"' >> ~/.zshrc
 RUN printf '%s\n' \
-        'if [[ -f /opt/ros/${ROS_DISTRO:-rolling}/setup.zsh ]]; then' \
-        '  source /opt/ros/${ROS_DISTRO:-rolling}/setup.zsh' \
-        'fi' \
+        "if [[ -f /opt/ros/${ROS_DISTRO}/setup.zsh ]]; then" \
+        "  source /opt/ros/${ROS_DISTRO}/setup.zsh" \
+        "fi" \
         'if [[ -f ~/.svic321/zshrc.zsh ]]; then' \
         '  source ~/.svic321/zshrc.zsh' \
         'fi' \
@@ -83,4 +85,5 @@ USER root
 
 # [Optional] Set the default user. Omit if you want to keep the default as root.
 USER $USERNAME
+WORKDIR /home/ws
 CMD ["/bin/zsh"]

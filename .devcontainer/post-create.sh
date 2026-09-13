@@ -12,6 +12,8 @@ if [[ ! -f "$HOME/.config/starship.toml" ]]; then
   mkdir -p "$HOME/.config"
   starship preset nerd-font-symbols -o "$HOME/.config/starship.toml"
 fi
+"$HOME/.tmux/plugins/tpm/scripts/install_plugins.sh" >/dev/null 2>&1
+"$HOME/.svic321/bin/setup-tmux" >/dev/null 2>&1
 sudo rosdep update
 sudo rosdep install --from-paths src --ignore-src -y
 sudo chown -R "$(whoami)" /home/ws/
