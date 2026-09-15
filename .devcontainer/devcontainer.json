@@ -43,7 +43,8 @@
   ],
   "mounts": [
     "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached",
-    "source=${localEnv:SSH_AUTH_SOCK},target=/ssh-agent,type=bind"
+    // falls back to /dev/null when no SSH agent socket is available on the host
+    "source=${localEnv:SSH_AUTH_SOCK:/dev/null},target=/ssh-agent,type=bind"
   ],
     "postCreateCommand": "bash .devcontainer/post-create.sh"
 }
