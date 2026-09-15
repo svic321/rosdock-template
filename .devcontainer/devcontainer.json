@@ -31,7 +31,9 @@
     "ROS_DOMAIN_ID": "42",
     "SSH_AUTH_SOCK": "/ssh-agent",
     "TERM": "xterm-256color",
-    "COLORTERM": "truecolor"
+    "COLORTERM": "truecolor",
+    "QT_SCALE_FACTOR": "1.5",
+    "QT_AUTO_SCREEN_SCALE_FACTOR": "0"
   },
   "runArgs": [
     "--net=host",

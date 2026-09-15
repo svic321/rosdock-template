@@ -20,7 +20,12 @@ RUN groupadd --gid $USER_GID $USERNAME \
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y python3-pip
 RUN apt-get install -y zsh git curl openssh-client command-not-found
-RUN apt-get install -y bat ripgrep fd-find zoxide eza lf starship tmux git-delta
+RUN apt-get install -y bat ripgrep fd-find zoxide eza lf starship tmux git-delta less
+RUN apt-get update && apt-get install -y \
+        ros-${ROS_DISTRO}-rqt \
+        ros-${ROS_DISTRO}-rqt-common-plugins \
+        ros-${ROS_DISTRO}-foxglove-bridge \
+        ros-${ROS_DISTRO}-turtlesim
 
 # Install oh-my-zsh for the user and make zsh the default login shell
 RUN chsh -s $(which zsh) $USERNAME
