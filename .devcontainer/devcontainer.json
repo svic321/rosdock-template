@@ -10,6 +10,7 @@
   },
   "workspaceFolder": "/home/ws",
   "workspaceMount": "source=${localWorkspaceFolder},target=/home/ws,type=bind",
+  "initializeCommand": "bash .devcontainer/init-xauth.sh",
   "customizations": {
     "vscode": {
       "extensions":[
@@ -27,6 +28,7 @@
   },
   "containerEnv": {
     "DISPLAY": "unix:0",
+    "XAUTHORITY": "/tmp/.devcontainer.xauth",
     "ROS_AUTOMATIC_DISCOVERY_RANGE": "LOCALHOST",
     "ROS_DOMAIN_ID": "42",
     "SSH_AUTH_SOCK": "/ssh-agent",
@@ -43,6 +45,8 @@
   ],
   "mounts": [
     "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached",
+    // Xauthority cookie regenerated for the container's DISPLAY, see init-xauth.sh
+    "source=${localEnv:HOME}/.devcontainer.xauth,target=/tmp/.devcontainer.xauth,type=bind,consistency=cached",
     // falls back to /dev/null when no SSH agent socket is available on the host
     "source=${localEnv:SSH_AUTH_SOCK:/dev/null},target=/ssh-agent,type=bind"
   ],
