@@ -6,3 +6,16 @@
 !docker/
 !docker/**
 !.dockerignore
+!.gitattributes
+
+# Track ROS2 source packages
+!src/
+!src/**
+
+# But exclude generated/build artifacts within src
+src/**/build/
+src/**/install/
+src/**/log/
+src/**/__pycache__/
+src/**/*.pyc
+src/**/*.egg-info/
